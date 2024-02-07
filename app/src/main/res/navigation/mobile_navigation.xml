@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_schedule">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_schedule"
         android:name="com.example.easystudy.ui.schedule.ScheduleFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:label="Schedule"
+        tools:layout="@layout/fragment_schedule" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_exams"
         android:name="com.example.easystudy.ui.exams.ExamsFragment"
-        android:label="@string/title_dashboard"
+        android:label="Exams"
         tools:layout="@layout/fragment_exams" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_grades"
         android:name="com.example.easystudy.ui.grades.GradesFragment"
-        android:label="@string/title_notifications"
+        android:label="Grades"
         tools:layout="@layout/fragment_grades" />
 </navigation>

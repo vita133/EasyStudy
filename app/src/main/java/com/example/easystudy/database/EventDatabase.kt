@@ -4,9 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.easystudy.entities.DateConverter
+import com.example.easystudy.entities.TimeConverter
 import com.example.easystudy.entities.Event
 
 @Database(entities = [Event::class], version = 1, exportSchema = false)
+@TypeConverters(DateConverter::class, TimeConverter::class)
 abstract class EventDatabase : RoomDatabase() {
 
     abstract fun eventDao(): EventDao

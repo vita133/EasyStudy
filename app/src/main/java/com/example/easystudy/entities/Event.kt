@@ -1,6 +1,5 @@
 package com.example.easystudy.entities
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
@@ -16,5 +15,4 @@ data class Event(
     val teacher: String,
     val repeat: RepeatType,
     val location: String,
-    @Embedded val tasks: List<Task> = emptyList()
 )
