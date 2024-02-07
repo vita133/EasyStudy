@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="com.example.easystudy.ui.schedule.ScheduleFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_schedule" />
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
