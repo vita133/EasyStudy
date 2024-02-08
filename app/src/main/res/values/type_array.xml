@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="subject_types">
+        <item>Лекція</item>
+        <item>Іспит</item>
+        <item>Семінар</item>
+        <item>Практика</item>
+    </string-array>
+</resources>

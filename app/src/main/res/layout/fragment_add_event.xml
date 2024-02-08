@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/rounded_corners"
+        tools:context=".ui.addEvent.AddEventFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:layout_marginStart="20dp"
+                android:text="Назва події"
+                android:textColor="@color/dark_blue"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/editText_nameSubject"
+                android:layout_width="203dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/light_blue"
+                android:ems="10"
+                android:inputType="text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/textView_dateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:text="Дата/Час"
+                android:textColor="@color/dark_blue"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_nameSubject" />
+
+            <EditText
+                android:id="@+id/editText_date"
+                android:layout_width="85dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/light_blue"
+                android:ems="10"
+                android:inputType="date"
+                android:hint="дд.мм.рррр"
+                android:textSize="12sp"
+                android:textAlignment="center"
+                android:textColorHint="@color/dark_blue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_dateTime" />
+
+            <EditText
+                android:id="@+id/editText_timeStart"
+                android:layout_width="50dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="38dp"
+                android:background="@color/light_blue"
+                android:ems="10"
+                android:inputType="time"
+                android:textAlignment="center"
+                android:hint="00:00"
+                android:textColorHint="@color/dark_blue"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@+id/editText_date"
+                app:layout_constraintTop_toBottomOf="@+id/editText_nameSubject" />
+
+            <EditText
+                android:id="@+id/editText_timeEnd"
+                android:layout_width="50dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="38dp"
+                android:background="@color/light_blue"
+                android:ems="10"
+                android:textAlignment="center"
+                android:hint="00:00"
+                android:textColorHint="@color/dark_blue"
+                android:textSize="12sp"
+                android:inputType="time"
+                app:layout_constraintStart_toEndOf="@+id/editText_timeStart"
+                app:layout_constraintTop_toBottomOf="@+id/editText_nameSubject" />
+
+            <TextView
+                android:id="@+id/textView_typeSubject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:text="Тип події"
+                android:textColor="@color/dark_blue"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_date" />
+
+            <Spinner
+                android:id="@+id/editText_typeSubject"
+                android:layout_width="203dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/light_blue"
+                android:ems="10"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_typeSubject"
+                android:completionHint="Тип предмету"
+                android:completionThreshold="1"
+                android:inputType="text"
+                android:drawSelectorOnTop="true"
+                android:popupBackground="@color/white"
+                android:spinnerMode="dropdown" />
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</RelativeLayout>

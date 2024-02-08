@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textSize="12sp"
-        android:text="7"
+        android:text="Пон"
         android:id="@+id/txt_date"/>
 
     <TextView
