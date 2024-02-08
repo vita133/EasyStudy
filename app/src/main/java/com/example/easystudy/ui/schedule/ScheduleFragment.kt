@@ -65,11 +65,10 @@ class ScheduleFragment : Fragment() {
 
     private fun setFloatingButtonClickListener() {
         //open fragment to add new event
+
         binding.floatingActionButton2.setOnClickListener {
 
         }
-
-
     }
 
     private fun setUpCalendar(changeMonth: Calendar? = null) {
