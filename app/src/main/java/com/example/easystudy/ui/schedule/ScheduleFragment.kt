@@ -14,6 +14,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+
 class ScheduleFragment : Fragment() {
 
     private var _binding: FragmentScheduleBinding? = null
@@ -24,11 +25,11 @@ class ScheduleFragment : Fragment() {
 
 
 
-    private val lastDayInCalendar = Calendar.getInstance(Locale.ENGLISH)
-    private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
-    private val cal = Calendar.getInstance(Locale.ENGLISH)
+    private val lastDayInCalendar = Calendar.getInstance(Locale("uk", "UA"))
+    private val sdf = SimpleDateFormat("MMMM yyyy", Locale("uk", "UA"))
+    private val cal = Calendar.getInstance(Locale("uk", "UA"))
 
-    private val currentDate = Calendar.getInstance(Locale.ENGLISH)
+    private val currentDate = Calendar.getInstance(Locale("uk", "UA"))
     private val currentDay = currentDate[Calendar.DAY_OF_MONTH]
     private val currentMonth = currentDate[Calendar.MONTH]
     private val currentYear = currentDate[Calendar.YEAR]
@@ -57,15 +58,22 @@ class ScheduleFragment : Fragment() {
 
         lastDayInCalendar.add(Calendar.MONTH, 6)
         setUpCalendar()
-
-
+        setFloatingButtonClickListener()
 
         return root
     }
 
+    private fun setFloatingButtonClickListener() {
+        //open fragment to add new event
+        binding.floatingActionButton2.setOnClickListener {
+
+        }
+
+
+    }
 
     private fun setUpCalendar(changeMonth: Calendar? = null) {
-        binding.textViewDateTodayMain!!.text = sdf.format(cal.time)
+        binding.textViewDateTodayMain.text = sdf.format(cal.time)
         val monthCalendar = cal.clone() as Calendar
         val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
 
@@ -132,9 +140,50 @@ class ScheduleFragment : Fragment() {
                 val clickCalendar = Calendar.getInstance()
                 clickCalendar.time = dates[position]
                 selectedDay = clickCalendar[Calendar.DAY_OF_MONTH]
+                selectedMonth = clickCalendar[Calendar.MONTH]
+                selectedYear = clickCalendar[Calendar.YEAR]
+
+                displayDate(selectedDay, selectedMonth, selectedYear)
             }
         })
     }
+
+    private fun displayDate(day: Int, month: Int, year: Int) {
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_MONTH, day)
+            set(Calendar.MONTH, month)
+            set(Calendar.YEAR, year)
+        }
+
+        val dateFormat = SimpleDateFormat("d MMMM yyyy", Locale("uk", "UA"))
+        val formattedDate = dateFormat.format(calendar.time)
+        binding.textViewDateTodayMain.text = formattedDate
+
+        val dayOfWeekFormat = SimpleDateFormat("EEEE", Locale("uk", "UA"))
+        val formattedDayOfWeek = dayOfWeekFormat.format(calendar.time)
+        binding.textViewToday.text = formattedDayOfWeek
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val selectedDate = getSelectedDate()
+        displaySchedule(selectedDate)
+    }
+
+    private fun getSelectedDate(): Calendar {
+        val selectedDate = Calendar.getInstance(Locale("uk", "UA"))
+        selectedDate.set(Calendar.DAY_OF_MONTH, selectedDay)
+        selectedDate.set(Calendar.MONTH, selectedMonth)
+        selectedDate.set(Calendar.YEAR, selectedYear)
+        return selectedDate
+    }
+
+
+    private fun displaySchedule(date: Calendar) {
+        // Реалізація відображення розкладу за обраною користувачем датою
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

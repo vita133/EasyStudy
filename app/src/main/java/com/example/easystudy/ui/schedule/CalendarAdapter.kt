@@ -143,7 +143,7 @@ class CalendarAdapter(private val context: Context,
     private fun makeItemSelected(holder: ViewHolder) {
         holder.txtDay!!.setTextColor(Color.parseColor("#FFFFFF"))
         holder.txtDayInWeek!!.setTextColor(Color.parseColor("#FFFFFF"))
-        holder.linearLayout!!.setBackgroundColor(ContextCompat.getColor(context, R.color.purple_200))
+        holder.linearLayout!!.setBackgroundColor(ContextCompat.getColor(context, R.color.dark_blue))
         holder.linearLayout!!.isEnabled = false
     }
 
