@@ -87,7 +87,8 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun setUpCalendar(changeMonth: Calendar? = null) {
-        binding.textViewDateTodayMain.text = sdf.format(cal.time)
+        displayDate(selectedDay, selectedMonth, selectedYear)
+
         val monthCalendar = cal.clone() as Calendar
         val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
 

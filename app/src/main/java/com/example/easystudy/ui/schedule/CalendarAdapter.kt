@@ -74,40 +74,23 @@ class CalendarAdapter(private val context: Context,
         holder.txtDay!!.text = cal[Calendar.DAY_OF_MONTH].toString()
 
         /**
-         * I think you can use "cal.after (currentDate)" and "cal == currentDate",
-         * but it didn't work properly for me, so I used this longer version. Here I just ask
-         * if the displayed date is after the current date or if it is current date, if so,
-         * then you enable the item and it is possible to click on it, otherwise deactivate it.
-         * The selectCurrentDate value is valid only at the beginning, it will be the current
-         * day or the first day, for example when starting the application or changing the month.
+         * Make all dates clickable.
          */
-        if (displayYear >= currentYear)
-            if (displayMonth >= currentMonth || displayYear > currentYear)
-                if (displayDay >= currentDay || displayMonth > currentMonth || displayYear > currentYear) {
-                    /**
-                     * Invoke OnClickListener and make the item selected.
-                     */
-                    holder.linearLayout!!.setOnClickListener {
-                        index = holder.getAdapterPosition()
-                        selectCurrentDate = false
-                        holder.listener.onItemClick(positionn)
-                        notifyDataSetChanged()
-                    }
+        holder.linearLayout!!.setOnClickListener {
+            index = holder.adapterPosition
+            selectCurrentDate = false
+            holder.listener.onItemClick(positionn)
+            notifyDataSetChanged()
+        }
 
-                    if (index == positionn)
-                        makeItemSelected(holder)
-                    else {
-                        if (displayDay == selectedDay
-                            && displayMonth == selectedMonth
-                            && displayYear == selectedYear
-                            && selectCurrentDate)
-                            makeItemSelected(holder)
-                        else
-                            makeItemDefault(holder)
-                    }
-                } else makeItemDisabled(holder)
-            else makeItemDisabled(holder)
-        else makeItemDisabled(holder)
+        /**
+         * Check if the current date is selected or not.
+         */
+        if (index == positionn || (displayDay == selectedDay && displayMonth == selectedMonth && displayYear == selectedYear && selectCurrentDate)) {
+            makeItemSelected(holder)
+        } else {
+            makeItemDefault(holder, cal)
+        }
     }
 
     inner class ViewHolder(itemView: View, val listener: OnItemClickListener): RecyclerView.ViewHolder(itemView) {
@@ -130,11 +113,21 @@ class CalendarAdapter(private val context: Context,
     /**
      * This make the item disabled.
      */
-    private fun makeItemDisabled(holder: ViewHolder) {
-        holder.txtDay!!.setTextColor(ContextCompat.getColor(context, R.color.black))
-        holder.txtDayInWeek!!.setTextColor(ContextCompat.getColor(context, R.color.black))
+    private fun makeItemDefault(holder: ViewHolder, cal: Calendar) {
+        holder.txtDay!!.setTextColor(Color.BLACK)
+        holder.txtDayInWeek!!.setTextColor(Color.BLACK)
         holder.linearLayout!!.setBackgroundColor(Color.WHITE)
-        holder.linearLayout!!.isEnabled = false
+
+        if (isPastDate(cal)) {
+            holder.linearLayout!!.setBackgroundColor(ContextCompat.getColor(context, R.color.light_gray))
+        }
+
+        holder.linearLayout!!.isEnabled = true
+    }
+
+    private fun isPastDate(cal: Calendar): Boolean {
+        val currentCalendar = Calendar.getInstance()
+        return cal.before(currentCalendar)
     }
 
     /**
@@ -147,13 +140,4 @@ class CalendarAdapter(private val context: Context,
         holder.linearLayout!!.isEnabled = false
     }
 
-    /**
-     * This make the item default.
-     */
-    private fun makeItemDefault(holder: ViewHolder) {
-        holder.txtDay!!.setTextColor(Color.BLACK)
-        holder.txtDayInWeek!!.setTextColor(Color.BLACK)
-        holder.linearLayout!!.setBackgroundColor(Color.WHITE)
-        holder.linearLayout!!.isEnabled = true
-    }
 }

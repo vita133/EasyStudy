@@ -6,4 +6,10 @@
         <item>Семінар</item>
         <item>Практика</item>
     </string-array>
+
+    <string-array name="subject_repeat">
+    <item>Ніколи</item>
+    <item>Щотижня</item>
+    <item>Що 2 тижні</item>
+    </string-array>
 </resources>

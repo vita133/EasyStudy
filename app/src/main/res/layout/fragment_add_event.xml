@@ -127,6 +127,8 @@
                 android:background="@color/light_blue"
                 android:ems="10"
                 android:textAlignment="center"
+                android:entries="@array/subject_types"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_typeSubject"
                 android:completionHint="Тип предмету"
@@ -184,6 +186,7 @@
                 android:background="@color/light_blue"
                 android:completionHint="Тип предмету"
                 android:completionThreshold="1"
+                android:entries="@array/subject_repeat"
                 android:drawSelectorOnTop="true"
                 android:ems="10"
                 android:inputType="text"
