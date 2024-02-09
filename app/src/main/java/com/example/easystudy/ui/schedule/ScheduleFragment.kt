@@ -247,7 +247,24 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun updateUI(events: List<Event>) {
-        val adapter = EventAdapter(events)
+        val adapter = EventAdapter(events, object : EventAdapter.OnEventClickListener {
+            override fun onEditButtonClick() {
+                val fragment = AddEventFragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+            override fun onItemClick() {
+                val fragment = EventInfoFragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+        })
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
     }
