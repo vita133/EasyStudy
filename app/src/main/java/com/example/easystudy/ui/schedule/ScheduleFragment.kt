@@ -197,9 +197,12 @@ class ScheduleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentScheduleBinding.bind(view)
 
+
         recyclerView = view.findViewById(R.id.event_recycler_view)
         val selectedDate = getSelectedDate()
         displaySchedule(selectedDate)
+
+
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun displaySchedule(date: Calendar) {

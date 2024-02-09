@@ -10,6 +10,7 @@ import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import com.example.easystudy.databinding.FragmentAddEventBinding
 import com.example.easystudy.databinding.FragmentExamsBinding
+import com.example.easystudy.ui.schedule.ScheduleFragment
 
 
 class AddEventFragment : Fragment() {
@@ -27,7 +28,6 @@ class AddEventFragment : Fragment() {
         _binding = FragmentAddEventBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        //connect spinner
         val spinner: Spinner = binding.spinnerTypeSubject
         val adapter = ArrayAdapter.createFromResource(
             requireContext(),
@@ -36,7 +36,34 @@ class AddEventFragment : Fragment() {
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
+        setSaveButtonClickListener()
+        setCancelButtonClickListener()
 
         return root
     }
+
+    private fun setSaveButtonClickListener() {
+        binding.buttonSaveEvent.setOnClickListener {
+            val fragment = ScheduleFragment()
+            val fragmentManager = requireActivity().supportFragmentManager
+
+            fragmentManager.beginTransaction()
+                .replace(com.example.easystudy.R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    private fun setCancelButtonClickListener() {
+        binding.buttonCancel.setOnClickListener {
+            val fragment = ScheduleFragment()
+            val fragmentManager = requireActivity().supportFragmentManager
+
+            fragmentManager.beginTransaction()
+                .replace(com.example.easystudy.R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
 }
