@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,11 @@ import com.example.easystudy.entities.Event
 import com.example.easystudy.entities.RepeatType
 import com.example.easystudy.ui.addEvent.AddEventFragment
 import com.example.easystudy.ui.eventInfo.EventInfoFragment
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -39,6 +45,7 @@ class ScheduleFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var eventDao: EventDao
+    private lateinit var adapter: EventAdapter
 
 
     private val lastDayInCalendar = Calendar.getInstance(Locale("uk", "UA"))
@@ -179,10 +186,74 @@ class ScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentScheduleBinding.bind(view)
-
         recyclerView = view.findViewById(R.id.event_recycler_view)
         val selectedDate = getSelectedDate()
         displaySchedule(selectedDate)
+
+        val database = EventDatabase.getDatabase(requireContext())
+        eventDao = database.eventDao()
+
+        adapter = EventAdapter(emptyList(), object : EventAdapter.OnEventClickListener {
+            override fun onEditButtonClick() {
+                val fragment = AddEventFragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+            override fun onItemClick() {
+                val fragment = EventInfoFragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+        })
+
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+
+        setupSwipeToDelete()
+    }
+
+    private fun setupSwipeToDelete() {
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.RIGHT
+        ) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val deletedEvent = adapter.getEventAtPosition(position)
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    eventDao.deleteEvent(deletedEvent)
+                }
+
+                Snackbar.make(
+                    binding.root,
+                    "Event deleted",
+                    Snackbar.LENGTH_LONG
+                ).setAction("Undo") {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        eventDao.insertEvent(deletedEvent)
+                    }
+                }.show()
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -196,9 +267,14 @@ class ScheduleFragment : Fragment() {
 
         eventDao = database.eventDao()
 
-        val eventsForDate = getEventsForDate(localDate)
-        eventsForDate.observe(viewLifecycleOwner) { events ->
-            updateUI(events)
+        CoroutineScope(Dispatchers.IO).launch {
+            val eventsForDate = getEventsForDate(localDate)
+
+            withContext(Dispatchers.Main) {
+                eventsForDate.observe(viewLifecycleOwner) { events ->
+                    updateUI(events)
+                }
+            }
         }
     }
 
@@ -238,7 +314,6 @@ class ScheduleFragment : Fragment() {
                         if ((weeksBetween % 2).toInt() == 0 && date.dayOfWeek == event.date.dayOfWeek)
                             events.add(event)
                     }
-
                     else -> {}
                 }
             }
@@ -247,26 +322,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun updateUI(events: List<Event>) {
-        val adapter = EventAdapter(events, object : EventAdapter.OnEventClickListener {
-            override fun onEditButtonClick() {
-                val fragment = AddEventFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
-
-            override fun onItemClick() {
-                val fragment = EventInfoFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
-        })
-
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
+        adapter.updateEvents(events)
     }
 
     override fun onDestroyView() {

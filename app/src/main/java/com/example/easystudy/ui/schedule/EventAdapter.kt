@@ -1,5 +1,6 @@
 package com.example.easystudy.ui.schedule
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +11,31 @@ import com.example.easystudy.R
 import com.example.easystudy.entities.Event
 import com.example.easystudy.entities.EventType
 import com.example.easystudy.entities.toUkrainianString
-class EventAdapter(private val eventList: List<Event>,
-                   private val onEventClickListener: OnEventClickListener) : RecyclerView.Adapter<EventAdapter.EventViewHolder>()  {
+
+class EventAdapter(private var eventList: List<Event>,
+                   private val onEventClickListener: OnEventClickListener) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
         return EventViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val currentItem = eventList[position]
         holder.bind(currentItem)
+    }
+    fun getEventAtPosition(position: Int): Event {
+        return eventList[position]
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateEvents(events: List<Event>) {
+        this.eventList = events
+        notifyDataSetChanged()
+    }
+    fun removeEvent(position: Int) {
+        eventList.toMutableList().removeAt(position)
+        notifyItemRemoved(position)
     }
 
     override fun getItemCount() = eventList.size
@@ -28,7 +44,6 @@ class EventAdapter(private val eventList: List<Event>,
         fun onEditButtonClick()
         fun onItemClick()
     }
-
     inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val eventTitleTextView: TextView = itemView.findViewById(R.id.textView_event_title)
         private val eventTypeTextView: TextView = itemView.findViewById(R.id.textView_type)
@@ -57,7 +72,6 @@ class EventAdapter(private val eventList: List<Event>,
 
         fun bind(event: Event) {
             val formattedTime = event.startTime.toString() + "-" + event.endTime.toString()
-
 
             val textColor = when (event.type) {
                 EventType.LECTURE -> R.color.dark_blue
@@ -94,5 +108,6 @@ class EventAdapter(private val eventList: List<Event>,
             eventLocationTextView.text = event.location
 
         }
+
     }
 }
