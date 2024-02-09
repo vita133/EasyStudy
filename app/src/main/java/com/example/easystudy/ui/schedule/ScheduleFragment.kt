@@ -322,6 +322,13 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun updateUI(events: List<Event>) {
+        if (events.isEmpty()) {
+            binding.imageViewNoEvents.visibility = View.VISIBLE
+            binding.textViewNoEvents.visibility = View.VISIBLE
+        } else {
+            binding.imageViewNoEvents.visibility = View.GONE
+            binding.textViewNoEvents.visibility = View.GONE
+        }
         adapter.updateEvents(events)
     }
 

@@ -67,4 +67,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white" />
 
+    <ImageView
+        android:id="@+id/imageViewNoEvents"
+        android:layout_width="163dp"
+        android:layout_height="163dp"
+        android:src="@drawable/img"
+        app:layout_constraintBottom_toBottomOf="@+id/event_recycler_view"
+        app:layout_constraintEnd_toEndOf="@+id/event_recycler_view"
+        app:layout_constraintStart_toStartOf="@+id/event_recycler_view"
+        app:layout_constraintTop_toBottomOf="@+id/calendar_recycler_view"
+        app:layout_constraintVertical_bias="0.805" />
+
+    <TextView
+        android:id="@+id/textViewNoEvents"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="168dp"
+        android:text="Сьогодні нічого не заплановано"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendar_recycler_view" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
