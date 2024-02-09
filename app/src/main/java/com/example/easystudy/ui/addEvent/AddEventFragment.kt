@@ -31,9 +31,9 @@ class AddEventFragment : Fragment() {
         val spinner: Spinner = binding.spinnerTypeSubject
         val adapter = ArrayAdapter.createFromResource(
             requireContext(),
-            com.example.easystudy.R.array.subject_types, android.R.layout.simple_spinner_item
+            com.example.easystudy.R.array.subject_types, R.layout.simple_spinner_item
         )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
 

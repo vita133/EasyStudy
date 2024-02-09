@@ -65,9 +65,9 @@ class CalendarAdapter(private val context: Context,
          * Set text to txtDayInWeek and txtDay.
          */
         try {
-            val dayInWeek = sdf.parse(cal.time.toString())!!
-            sdf.applyPattern("EEE")
-            holder.txtDayInWeek!!.text = sdf.format(dayInWeek).toString()
+            val dayInWeekFormat = SimpleDateFormat("E", Locale("uk", "UA"))
+            val dayInWeek = dayInWeekFormat.format(cal.time)
+            holder.txtDayInWeek!!.text = dayInWeek
         } catch (ex: ParseException) {
             Log.v("Exception", ex.localizedMessage!!)
         }

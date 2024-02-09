@@ -176,8 +176,9 @@ class ScheduleFragment : Fragment() {
         binding.textViewDateTodayMain.text = formattedDate
 
         val dayOfWeekFormat = SimpleDateFormat("EEEE", Locale("uk", "UA"))
-        val formattedDayOfWeek = dayOfWeekFormat.format(calendar.time)
+        val formattedDayOfWeek = dayOfWeekFormat.format(calendar.time).replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
         binding.textViewToday.text = formattedDayOfWeek
+
     }
 
     private fun getSelectedDate(): Calendar {
