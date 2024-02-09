@@ -1,15 +1,24 @@
 package com.example.easystudy.ui.schedule
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.example.easystudy.R
+import com.example.easystudy.database.EventDao
+import com.example.easystudy.database.EventDatabase
 import com.example.easystudy.databinding.FragmentScheduleBinding
+import com.example.easystudy.entities.Event
+import com.example.easystudy.ui.addEvent.AddEventFragment
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -23,6 +32,8 @@ class ScheduleFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var eventDao: EventDao
 
 
     private val lastDayInCalendar = Calendar.getInstance(Locale("uk", "UA"))
@@ -64,10 +75,14 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun setFloatingButtonClickListener() {
-        //open fragment to add new event
-
         binding.floatingActionButton2.setOnClickListener {
+            val fragment = AddEventFragment()
+            val fragmentManager = requireActivity().supportFragmentManager
 
+            fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
         }
     }
 
@@ -135,6 +150,7 @@ class ScheduleFragment : Fragment() {
          * Then change the selected day.
          */
         calendarAdapter.setOnItemClickListener(object : CalendarAdapter.OnItemClickListener {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemClick(position: Int) {
                 val clickCalendar = Calendar.getInstance()
                 clickCalendar.time = dates[position]
@@ -143,6 +159,7 @@ class ScheduleFragment : Fragment() {
                 selectedYear = clickCalendar[Calendar.YEAR]
 
                 displayDate(selectedDay, selectedMonth, selectedYear)
+                displaySchedule(getSelectedDate())
             }
         })
     }
@@ -163,13 +180,6 @@ class ScheduleFragment : Fragment() {
         binding.textViewToday.text = formattedDayOfWeek
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val selectedDate = getSelectedDate()
-        displaySchedule(selectedDate)
-    }
-
     private fun getSelectedDate(): Calendar {
         val selectedDate = Calendar.getInstance(Locale("uk", "UA"))
         selectedDate.set(Calendar.DAY_OF_MONTH, selectedDay)
@@ -178,9 +188,37 @@ class ScheduleFragment : Fragment() {
         return selectedDate
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentScheduleBinding.bind(view)
 
+        recyclerView = view.findViewById(R.id.event_recycler_view)
+        val selectedDate = getSelectedDate()
+        displaySchedule(selectedDate)
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun displaySchedule(date: Calendar) {
-        // Реалізація відображення розкладу за обраною користувачем датою
+        val localDate = LocalDate.of(
+            date.get(Calendar.YEAR),
+            date.get(Calendar.MONTH) + 1,
+            date.get(Calendar.DAY_OF_MONTH)
+        )
+        val database = EventDatabase.getDatabase(requireContext())
+
+        eventDao = database.eventDao()
+
+        val eventListLiveData = eventDao.getEventsByDate(localDate)
+
+        eventListLiveData.observe(viewLifecycleOwner) { events ->
+            updateUI(events)
+        }
+    }
+    private fun updateUI(events: List<Event>) {
+        val adapter = EventAdapter(events)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+
     }
 
     override fun onDestroyView() {
