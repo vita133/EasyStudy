@@ -16,9 +16,11 @@ import com.example.easystudy.database.EventDao
 import com.example.easystudy.database.EventDatabase
 import com.example.easystudy.databinding.FragmentScheduleBinding
 import com.example.easystudy.entities.Event
+import com.example.easystudy.entities.RepeatType
 import com.example.easystudy.ui.addEvent.AddEventFragment
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -210,12 +212,40 @@ class ScheduleFragment : Fragment() {
 
         eventDao = database.eventDao()
 
+//        val eventsForDate = getEventsForDate(localDate)
+//        updateUI(eventsForDate)
         val eventListLiveData = eventDao.getEventsByDate(localDate)
 
         eventListLiveData.observe(viewLifecycleOwner) { events ->
             updateUI(events)
         }
     }
+
+
+//    private fun checkForRecurringEvents(date: LocalDate): List<Event> {
+//        val events: MutableList<Event> = mutableListOf()
+//
+//        val allEvents = eventDao.getAllEvents()
+//
+//        for (event in allEvents) {
+//            if (event.repeat != RepeatType.NEVER && (event.date.isBefore(date) || event.date == date)) {
+//                when (event.repeat) {
+//                    RepeatType.WEEKLY -> {
+//                        if (date.dayOfWeek == event.date.dayOfWeek)
+//                            events.add(event)
+//                    }
+//                    RepeatType.BIWEEKLY -> {
+//                        val weeksBetween = ChronoUnit.WEEKS.between(event.date, date)
+//                        if (weeksBetween % 2 == 0 && date.dayOfWeek == event.date.dayOfWeek)
+//                            events.add(event)
+//                    }
+//                }
+//            }
+//        }
+//
+//        return events
+//    }
+
     private fun updateUI(events: List<Event>) {
         val adapter = EventAdapter(events)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
