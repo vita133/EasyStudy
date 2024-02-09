@@ -8,18 +8,18 @@
     <fragment
         android:id="@+id/navigation_schedule"
         android:name="com.example.easystudy.ui.schedule.ScheduleFragment"
-        android:label="Schedule"
+        android:label="Розклад"
         tools:layout="@layout/fragment_schedule" />
 
     <fragment
         android:id="@+id/navigation_exams"
         android:name="com.example.easystudy.ui.exams.ExamsFragment"
-        android:label="Exams"
+        android:label="Іспити"
         tools:layout="@layout/fragment_exams" />
 
     <fragment
         android:id="@+id/navigation_grades"
         android:name="com.example.easystudy.ui.grades.GradesFragment"
-        android:label="Grades"
+        android:label="Оцінки"
         tools:layout="@layout/fragment_grades" />
 </navigation>

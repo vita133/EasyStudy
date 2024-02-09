@@ -1,17 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:id="@+id/event_linear_layout"
-android:padding="16dp">
-
-<TextView
-    android:id="@+id/textView_event_title"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="18sp"
-    android:textStyle="bold"
-    android:textColor="@color/black" />
+    android:orientation="vertical"
+    android:background="@drawable/rounded_corners_blue"
+    android:id="@+id/event_linear_layout"
+    android:padding="12dp">
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/textView_event_title"
+        android:layout_width="186dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:text="Управління ризиками і якістю проектів"
+        android:textColor="@color/dark_blue"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="14dp"
+        android:text="12:20-13:55"
+        android:textColor="@color/dark_blue"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:text="Лекція"
+        android:textColor="@color/dark_blue"
+        android:textSize="10sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView_ellipse"
+        app:layout_constraintTop_toBottomOf="@+id/textView_event_title" />
+
+    <ImageView
+        android:id="@+id/imageView_ellipse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_event_title"
+        app:srcCompat="@drawable/ic_ellipse_blue" />
+
+    <ImageView
+        android:id="@+id/imageView_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_ellipse"
+        app:srcCompat="@drawable/ic_map_blue" />
+
+    <TextView
+        android:id="@+id/textView_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:text="18-101"
+        android:textColor="@color/dark_blue"
+        android:textSize="10sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView_map"
+        app:layout_constraintTop_toBottomOf="@+id/textView_type" />
+
+    <ImageView
+        android:id="@+id/imageView_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="13dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_time"
+        app:srcCompat="@drawable/ic_edit_blue" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
