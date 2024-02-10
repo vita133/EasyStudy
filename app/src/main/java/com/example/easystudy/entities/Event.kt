@@ -16,4 +16,5 @@ data class Event(
     val teacher: String,
     val repeat: RepeatType,
     val location: String,
+    val count: Number
 )

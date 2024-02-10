@@ -8,9 +8,10 @@ import androidx.room.TypeConverters
 import com.example.easystudy.entities.DateConverter
 import com.example.easystudy.entities.TimeConverter
 import com.example.easystudy.entities.Event
+import com.example.easystudy.entities.NumberConverter
 
 @Database(entities = [Event::class], version = 1, exportSchema = false)
-@TypeConverters(DateConverter::class, TimeConverter::class)
+@TypeConverters(DateConverter::class, TimeConverter::class, NumberConverter::class)
 abstract class EventDatabase : RoomDatabase() {
 
     abstract fun eventDao(): EventDao

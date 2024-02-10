@@ -220,106 +220,32 @@ class ScheduleFragment : Fragment() {
 
         setupSwipeToDelete()
 
-//        val events = listOf(
-//            Event(
-//                title = "ПЗ високопродуктивних комп'ютерних систем",
-//                date = LocalDate.of(2024, 2, 13),
-//                startTime = LocalTime.of(8, 30),
-//                endTime = LocalTime.of(10, 5),
-//                type = EventType.LECTURE,
-//                teacher = "Корочкін О.В.",
-//                repeat = RepeatType.WEEKLY,
-//                location = "онлайн"
-//            ),
-//            Event(
-//                title = "Розробка мобільних застосувань під андроїд",
-//                date = LocalDate.of(2024, 2, 14),
-//                startTime = LocalTime.of(10, 25),
-//                endTime = LocalTime.of(12, 0),
-//                type = EventType.SEMINAR,
-//                teacher = "Орленко С.П.",
-//                repeat = RepeatType.BIWEEKLY,
-//                location = "онлайн"
-//            ),
-//            Event(
-//                title = "Професійне використання SQL/PLSQL",
-//                date = LocalDate.of(2024, 2, 9),
-//                startTime = LocalTime.of(5, 25),
-//                endTime = LocalTime.of(6, 0),
-//                type = EventType.SEMINAR,
-//                teacher = "Ульяницька К.О.",
-//                repeat = RepeatType.BIWEEKLY,
-//                location = "онлайн"
-//            ),
-//            Event(
-//                title = "ПЗ високопродуктивних комп'ютерних систем",
-//                date = LocalDate.of(2024, 2, 8),
-//                startTime = LocalTime.of(8, 30),
-//                endTime = LocalTime.of(10, 5),
-//                type = EventType.EXAM,
-//                teacher = "Корочкін О.В.",
-//                repeat = RepeatType.NEVER,
-//                location = "онлайн"
-//            ),
-//            Event(
-//                title = "Розробка мобільних застосувань під андроїд",
-//                date = LocalDate.of(2024, 2, 14),
-//                startTime = LocalTime.of(12, 20),
-//                endTime = LocalTime.of(13, 55),
-//                type = EventType.PRACTICE,
-//                teacher = "Орленко С.П.",
-//                repeat = RepeatType.WEEKLY,
-//                location = "онлайн"
-//            ),
-//
-//            Event(
-//                title = "Розробка мобільних застосувань під андроїд",
-//            date = LocalDate.of(2024, 2, 14),
-//            startTime = LocalTime.of(14, 20),
-//            endTime = LocalTime.of(15, 55),
-//            type = EventType.PRACTICE,
-//            teacher = "Орленко С.П.",
-//            repeat = RepeatType.WEEKLY,
-//            location = "онлайн"
-//        ),
-//            Event(
-//                title = "Розробка мобільних застосувань під андроїд",
-//                date = LocalDate.of(2024, 2, 14),
-//                startTime = LocalTime.of(16, 20),
-//                endTime = LocalTime.of(17, 55),
-//                type = EventType.PRACTICE,
-//                teacher = "Орленко С.П.",
-//                repeat = RepeatType.WEEKLY,
-//                location = "онлайн"
-//            )
-//        )
-//        CoroutineScope(Dispatchers.IO).launch {
-//            eventDao.insertEvents(events)
-//
-//            withContext(Dispatchers.Main) {
-//                val eventsByType = eventDao.getEventsByType(EventType.LECTURE)
-//                eventsByType.observe(viewLifecycleOwner) { events ->
-//                    Log.d("EventDao", "Events by type LECTURE: $events")
-//                }
-//
-//                val allEvents = eventDao.getAllEvents()
-//                allEvents.observe(viewLifecycleOwner) { events ->
-//                    Log.d("EventDao", "All events: $events")
-//                }
-//
-//                val currentDate = LocalDate.now()
-//                val eventsByDate = eventDao.getEventsByDate(currentDate)
-//                eventsByDate.observe(viewLifecycleOwner) { events ->
-//                    Log.d("EventDao", "Events for date $currentDate: $events")
-//                }
-//
-//                val eventId = 1L
-//                val eventById = eventDao.getEventById(eventId)
-//                eventById.observe(viewLifecycleOwner) { event ->
-//                    Log.d("EventDao", "Event with ID $eventId: $event")
-//                }
-//            }
- //       }
+        CoroutineScope(Dispatchers.IO).launch {
+
+            withContext(Dispatchers.Main) {
+                val eventsByType = eventDao.getEventsByType(EventType.LECTURE)
+                eventsByType.observe(viewLifecycleOwner) { events ->
+                    Log.d("EventDao", "Events by type LECTURE: $events")
+                }
+
+                val allEvents = eventDao.getAllEvents()
+                allEvents.observe(viewLifecycleOwner) { events ->
+                    Log.d("EventDao", "All events: $events")
+                }
+
+                val currentDate = LocalDate.now()
+                val eventsByDate = eventDao.getEventsByDate(currentDate)
+                eventsByDate.observe(viewLifecycleOwner) { events ->
+                    Log.d("EventDao", "Events for date $currentDate: $events")
+                }
+
+                val eventId = 1L
+                val eventById = eventDao.getEventById(eventId)
+                eventById.observe(viewLifecycleOwner) { event ->
+                    Log.d("EventDao", "Event with ID $eventId: $event")
+                }
+            }
+        }
     }
 
     private fun setupSwipeToDelete() {
@@ -373,7 +299,6 @@ class ScheduleFragment : Fragment() {
             date.get(Calendar.DAY_OF_MONTH)
         )
         val database = EventDatabase.getDatabase(requireContext())
-
         eventDao = database.eventDao()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -412,7 +337,7 @@ class ScheduleFragment : Fragment() {
         val events: MutableList<Event> = mutableListOf()
 
         for (event in allEvents) {
-            if (event.repeat != RepeatType.NEVER && (event.date.isBefore(date) || event.date == date)) {
+            if (event.repeat != RepeatType.NEVER && (event.date.isBefore(date) )) { //|| event.date == date)) {
                 when (event.repeat) {
                     RepeatType.WEEKLY -> {
                         if (date.dayOfWeek == event.date.dayOfWeek)

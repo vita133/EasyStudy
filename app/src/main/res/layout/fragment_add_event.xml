@@ -224,7 +224,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_place" />
 
             <TextView
-                android:id="@+id/textView_сountLessons"
+                android:id="@+id/textView_lessons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -237,7 +237,7 @@
 
 
             <EditText
-                android:id="@+id/editText_сountLessons"
+                android:id="@+id/editText_lessons"
                 android:layout_width="85dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="20dp"
@@ -250,7 +250,7 @@
                 android:textColorHint="@color/dark_blue"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_сountLessons" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_lessons" />
 
             <Button
                 android:id="@+id/button_saveEvent"
@@ -260,7 +260,7 @@
                 android:layout_marginTop="200dp"
                 android:text="Зберегти"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_сountLessons" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_lessons" />
 
             <Button
                 android:id="@+id/button_cancel"

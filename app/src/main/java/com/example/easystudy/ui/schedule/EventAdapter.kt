@@ -12,8 +12,7 @@ import com.example.easystudy.entities.Event
 import com.example.easystudy.entities.EventType
 import com.example.easystudy.entities.toUkrainianString
 
-class EventAdapter(private var eventList: List<Event>,
-                   private val onEventClickListener: OnEventClickListener) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
+class EventAdapter(private var eventList: List<Event>, private val onEventClickListener: OnEventClickListener) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
