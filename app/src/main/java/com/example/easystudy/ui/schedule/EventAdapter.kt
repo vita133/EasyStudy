@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easystudy.R
 import com.example.easystudy.entities.Event
@@ -40,8 +41,8 @@ class EventAdapter(private var eventList: List<Event>, private val onEventClickL
     override fun getItemCount() = eventList.size
 
     interface OnEventClickListener {
-        fun onEditButtonClick()
-        fun onItemClick()
+        fun onEditButtonClick(event: Event)
+        fun onItemClick(event: Event)
     }
     inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val eventTitleTextView: TextView = itemView.findViewById(R.id.textView_event_title)
@@ -49,22 +50,24 @@ class EventAdapter(private var eventList: List<Event>, private val onEventClickL
         private val eventTimeTextView: TextView = itemView.findViewById(R.id.textView_time)
         private val eventLocationTextView: TextView = itemView.findViewById(R.id.textView_location)
         private val background: View = itemView.findViewById(R.id.event_linear_layout)
-        private val ellipse: View = itemView.findViewById(R.id.imageView_ellipse)
-        val imageViewEdit: ImageView = itemView.findViewById(R.id.imageView_edit)
+        private val ellipse: ImageView = itemView.findViewById(R.id.imageView_ellipse)
+        private val map: ImageView = itemView.findViewById(R.id.imageView_map)
+        private val imageViewEdit: ImageView = itemView.findViewById(R.id.imageView_edit)
+        private val edit: ImageView = itemView.findViewById(R.id.imageView_edit)
 
         init {
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val event = eventList[position]
-                    onEventClickListener.onItemClick()
+                    onEventClickListener.onItemClick(event)
                 }
             }
             imageViewEdit.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val event = eventList[position]
-                    onEventClickListener.onEditButtonClick()
+                    onEventClickListener.onEditButtonClick(event)
                 }
             }
         }
@@ -87,19 +90,36 @@ class EventAdapter(private var eventList: List<Event>, private val onEventClickL
             }
 
             val ellipseImage = when (event.type) {
-                EventType.LECTURE -> R.drawable.ic_ellipse_blue
-                EventType.PRACTICE -> R.drawable.ic_ellipse_green
-                EventType.SEMINAR -> R.drawable.ic_ellipse_purple
-                EventType.EXAM -> R.drawable.ic_ellipse_red
+                EventType.LECTURE -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_ellipse_blue)
+                EventType.PRACTICE -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_ellipse_green)
+                EventType.SEMINAR -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_ellipse_purple)
+                EventType.EXAM -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_ellipse_red)
             }
+
+            val mapImage = when (event.type) {
+                EventType.LECTURE -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_map_blue)
+                EventType.PRACTICE -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_map_green)
+                EventType.SEMINAR -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_map_purple)
+                EventType.EXAM -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_map_red)
+            }
+
+            val editImage = when (event.type) {
+                EventType.LECTURE -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_edit_blue)
+                EventType.PRACTICE -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_edit_green)
+                EventType.SEMINAR -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_edit_purple)
+                EventType.EXAM -> ContextCompat.getDrawable(itemView.context, R.drawable.ic_edit_red)
+            }
+
 
             eventTitleTextView.setTextColor(textColor)
             eventTypeTextView.setTextColor(textColor)
             eventTimeTextView.setTextColor(textColor)
             eventLocationTextView.setTextColor(textColor)
             background.setBackgroundResource(backgroundDrawable)
-            ellipse.setBackgroundResource(ellipseImage)
 
+            ellipse.setImageDrawable(ellipseImage)
+            map.setImageDrawable(mapImage)
+            edit.setImageDrawable(editImage)
 
             eventTitleTextView.text = event.title
             eventTypeTextView.text = event.type.toUkrainianString()

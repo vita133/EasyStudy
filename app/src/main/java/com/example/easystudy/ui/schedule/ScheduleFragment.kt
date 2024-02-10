@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -23,7 +24,6 @@ import com.example.easystudy.entities.Event
 import com.example.easystudy.entities.EventType
 import com.example.easystudy.entities.RepeatType
 import com.example.easystudy.ui.addEvent.AddEventFragment
-import com.example.easystudy.ui.eventInfo.EventInfoFragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +31,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
@@ -52,7 +51,6 @@ class ScheduleFragment : Fragment() {
 
 
     private val lastDayInCalendar = Calendar.getInstance(Locale("uk", "UA"))
-    private val sdf = SimpleDateFormat("MMMM yyyy", Locale("uk", "UA"))
     private val cal = Calendar.getInstance(Locale("uk", "UA"))
 
     private val currentDate = Calendar.getInstance(Locale("uk", "UA"))
@@ -73,8 +71,6 @@ class ScheduleFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val scheduleViewModel =
-            ViewModelProvider(this).get(ScheduleViewModel::class.java)
 
         _binding = FragmentScheduleBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -135,14 +131,14 @@ class ScheduleFragment : Fragment() {
         }
 
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.calendarRecyclerView!!.layoutManager = layoutManager
+        binding.calendarRecyclerView.layoutManager = layoutManager
         val calendarAdapter = CalendarAdapter(requireContext(), dates, currentDate, changeMonth)
-        binding.calendarRecyclerView!!.adapter = calendarAdapter
+        binding.calendarRecyclerView.adapter = calendarAdapter
 
         when {
-            currentPosition > 2 -> binding.calendarRecyclerView!!.scrollToPosition(currentPosition - 3)
-            maxDaysInMonth - currentPosition < 2 -> binding.calendarRecyclerView!!.scrollToPosition(currentPosition)
-            else -> binding.calendarRecyclerView!!.scrollToPosition(currentPosition)
+            currentPosition > 2 -> binding.calendarRecyclerView.scrollToPosition(currentPosition - 3)
+            maxDaysInMonth - currentPosition < 2 -> binding.calendarRecyclerView.scrollToPosition(currentPosition)
+            else -> binding.calendarRecyclerView.scrollToPosition(currentPosition)
         }
 
         calendarAdapter.setOnItemClickListener(object : CalendarAdapter.OnItemClickListener {
@@ -198,20 +194,14 @@ class ScheduleFragment : Fragment() {
         eventDao = database.eventDao()
 
         adapter = EventAdapter(emptyList(), object : EventAdapter.OnEventClickListener {
-            override fun onEditButtonClick() {
-                val fragment = AddEventFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+            override fun onEditButtonClick(event: Event) {
+                val action = ScheduleFragmentDirections.actionNavigationScheduleToNavigationAddEvent(event.id)
+                Navigation.findNavController(requireView()).navigate(action)
             }
 
-            override fun onItemClick() {
-                val fragment = EventInfoFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+            override fun onItemClick(event: Event) {
+                val action = ScheduleFragmentDirections.actionNavigationScheduleToNavigationEventInfo(event.id)
+                Navigation.findNavController(requireView()).navigate(action)
             }
         })
 
@@ -219,6 +209,7 @@ class ScheduleFragment : Fragment() {
         recyclerView.adapter = adapter
 
         setupSwipeToDelete()
+
 
         CoroutineScope(Dispatchers.IO).launch {
 
