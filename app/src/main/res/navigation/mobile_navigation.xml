@@ -32,7 +32,23 @@
         android:id="@+id/navigation_exams"
         android:name="com.example.easystudy.ui.exams.ExamsFragment"
         android:label="Іспити"
-        tools:layout="@layout/fragment_exams" />
+        tools:layout="@layout/fragment_exams" >
+    <action
+        android:id="@+id/action_navigation_exams_to_navigation_event_info"
+        app:destination="@id/navigation_event_info">
+        <argument
+            android:name="event"
+            app:argType="long"
+            />
+    </action>
+    <action
+        android:id="@+id/action_navigation_exams_to_navigation_add_event"
+        app:destination="@id/navigation_add_event" >
+        <argument
+            android:name="event"
+            app:argType="long" />
+    </action>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_grades"
