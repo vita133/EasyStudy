@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="Дата/Час"
+                android:text="Дата початку/Час"
                 android:textColor="@color/dark_blue"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -224,17 +224,33 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_place" />
 
             <TextView
-                android:id="@+id/textView_list"
+                android:id="@+id/textView_сountLessons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
-                android:text="Список завдань"
+                android:text="Кількість запланованих занять"
                 android:textColor="@color/dark_blue"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText_place" />
 
+
+            <EditText
+                android:id="@+id/editText_сountLessons"
+                android:layout_width="85dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/light_blue"
+                android:ems="10"
+
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:textColorHint="@color/dark_blue"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_сountLessons" />
 
             <Button
                 android:id="@+id/button_saveEvent"
@@ -244,7 +260,7 @@
                 android:layout_marginTop="200dp"
                 android:text="Зберегти"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_list" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_сountLessons" />
 
             <Button
                 android:id="@+id/button_cancel"
@@ -255,6 +271,8 @@
                 android:text="Скасувати"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText_place" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

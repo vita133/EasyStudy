@@ -2,6 +2,7 @@ package com.example.easystudy.ui.schedule
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.example.easystudy.database.EventDao
 import com.example.easystudy.database.EventDatabase
 import com.example.easystudy.databinding.FragmentScheduleBinding
 import com.example.easystudy.entities.Event
+import com.example.easystudy.entities.EventType
 import com.example.easystudy.entities.RepeatType
 import com.example.easystudy.ui.addEvent.AddEventFragment
 import com.example.easystudy.ui.eventInfo.EventInfoFragment
@@ -29,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
@@ -182,6 +185,7 @@ class ScheduleFragment : Fragment() {
         return selectedDate
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -215,6 +219,107 @@ class ScheduleFragment : Fragment() {
         recyclerView.adapter = adapter
 
         setupSwipeToDelete()
+
+//        val events = listOf(
+//            Event(
+//                title = "ПЗ високопродуктивних комп'ютерних систем",
+//                date = LocalDate.of(2024, 2, 13),
+//                startTime = LocalTime.of(8, 30),
+//                endTime = LocalTime.of(10, 5),
+//                type = EventType.LECTURE,
+//                teacher = "Корочкін О.В.",
+//                repeat = RepeatType.WEEKLY,
+//                location = "онлайн"
+//            ),
+//            Event(
+//                title = "Розробка мобільних застосувань під андроїд",
+//                date = LocalDate.of(2024, 2, 14),
+//                startTime = LocalTime.of(10, 25),
+//                endTime = LocalTime.of(12, 0),
+//                type = EventType.SEMINAR,
+//                teacher = "Орленко С.П.",
+//                repeat = RepeatType.BIWEEKLY,
+//                location = "онлайн"
+//            ),
+//            Event(
+//                title = "Професійне використання SQL/PLSQL",
+//                date = LocalDate.of(2024, 2, 9),
+//                startTime = LocalTime.of(5, 25),
+//                endTime = LocalTime.of(6, 0),
+//                type = EventType.SEMINAR,
+//                teacher = "Ульяницька К.О.",
+//                repeat = RepeatType.BIWEEKLY,
+//                location = "онлайн"
+//            ),
+//            Event(
+//                title = "ПЗ високопродуктивних комп'ютерних систем",
+//                date = LocalDate.of(2024, 2, 8),
+//                startTime = LocalTime.of(8, 30),
+//                endTime = LocalTime.of(10, 5),
+//                type = EventType.EXAM,
+//                teacher = "Корочкін О.В.",
+//                repeat = RepeatType.NEVER,
+//                location = "онлайн"
+//            ),
+//            Event(
+//                title = "Розробка мобільних застосувань під андроїд",
+//                date = LocalDate.of(2024, 2, 14),
+//                startTime = LocalTime.of(12, 20),
+//                endTime = LocalTime.of(13, 55),
+//                type = EventType.PRACTICE,
+//                teacher = "Орленко С.П.",
+//                repeat = RepeatType.WEEKLY,
+//                location = "онлайн"
+//            ),
+//
+//            Event(
+//                title = "Розробка мобільних застосувань під андроїд",
+//            date = LocalDate.of(2024, 2, 14),
+//            startTime = LocalTime.of(14, 20),
+//            endTime = LocalTime.of(15, 55),
+//            type = EventType.PRACTICE,
+//            teacher = "Орленко С.П.",
+//            repeat = RepeatType.WEEKLY,
+//            location = "онлайн"
+//        ),
+//            Event(
+//                title = "Розробка мобільних застосувань під андроїд",
+//                date = LocalDate.of(2024, 2, 14),
+//                startTime = LocalTime.of(16, 20),
+//                endTime = LocalTime.of(17, 55),
+//                type = EventType.PRACTICE,
+//                teacher = "Орленко С.П.",
+//                repeat = RepeatType.WEEKLY,
+//                location = "онлайн"
+//            )
+//        )
+//        CoroutineScope(Dispatchers.IO).launch {
+//            eventDao.insertEvents(events)
+//
+//            withContext(Dispatchers.Main) {
+//                val eventsByType = eventDao.getEventsByType(EventType.LECTURE)
+//                eventsByType.observe(viewLifecycleOwner) { events ->
+//                    Log.d("EventDao", "Events by type LECTURE: $events")
+//                }
+//
+//                val allEvents = eventDao.getAllEvents()
+//                allEvents.observe(viewLifecycleOwner) { events ->
+//                    Log.d("EventDao", "All events: $events")
+//                }
+//
+//                val currentDate = LocalDate.now()
+//                val eventsByDate = eventDao.getEventsByDate(currentDate)
+//                eventsByDate.observe(viewLifecycleOwner) { events ->
+//                    Log.d("EventDao", "Events for date $currentDate: $events")
+//                }
+//
+//                val eventId = 1L
+//                val eventById = eventDao.getEventById(eventId)
+//                eventById.observe(viewLifecycleOwner) { event ->
+//                    Log.d("EventDao", "Event with ID $eventId: $event")
+//                }
+//            }
+ //       }
     }
 
     private fun setupSwipeToDelete() {
@@ -236,6 +341,7 @@ class ScheduleFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 val deletedEvent = adapter.getEventAtPosition(position)
 
+
                 CoroutineScope(Dispatchers.IO).launch {
                     eventDao.deleteEvent(deletedEvent)
                 }
@@ -247,6 +353,9 @@ class ScheduleFragment : Fragment() {
                 ).setAction("Undo") {
                     CoroutineScope(Dispatchers.IO).launch {
                         eventDao.insertEvent(deletedEvent)
+                        withContext(Dispatchers.Main) {
+                            adapter.notifyItemInserted(position)
+                        }
                     }
                 }.show()
             }
