@@ -14,12 +14,14 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.easystudy.database.EventDao
 import com.example.easystudy.database.EventDatabase
 import com.example.easystudy.databinding.FragmentAddEventBinding
 import com.example.easystudy.entities.Event
 import com.example.easystudy.entities.EventType
 import com.example.easystudy.entities.RepeatType
+import com.example.easystudy.viewmodels.EventViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,16 +55,51 @@ class AddEventFragment : Fragment() {
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
+        val arguments = arguments
+        var eventId = 0L
+        if (arguments != null) {
+            eventId = arguments.getLong("event")
+        }
+        val eventViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
+        if(eventId != 0L) {
+            val eventLiveData = eventViewModel.getEventById(eventId)
+            eventLiveData.observe(viewLifecycleOwner) { event ->
+                event?.let {
+                    binding.editTextNameSubject.setText(event.title)
+                    binding.editTextDate.setText(event.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
+                    binding.editTextTimeStart.setText(
+                        event.startTime.format(
+                            DateTimeFormatter.ofPattern(
+                                "HH:mm"
+                            )
+                        )
+                    )
+                    binding.editTextTimeEnd.setText(
+                        event.endTime.format(
+                            DateTimeFormatter.ofPattern(
+                                "HH:mm"
+                            )
+                        )
+                    )
+                    binding.spinnerTypeSubject.setSelection(event.type.ordinal)
+                    binding.editTextProfessor.setText(event.teacher)
+                    binding.spinnerRepeat.setSelection(event.repeat.ordinal)
+                    binding.editTextPlace.setText(event.location)
+                    binding.editTextLessons.setText(event.count.toString())
+                }
+            }
+        }
+
         setupDateInput()
         setupTimeInput()
-        setSaveButtonClickListener()
+        setSaveButtonClickListener(eventId)
         setCancelButtonClickListener()
 
         return root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setSaveButtonClickListener() {
+    private fun setSaveButtonClickListener(eventId: Long) {
         binding.buttonSaveEvent.setOnClickListener {
             val title = binding.editTextNameSubject.text.toString()
             val dateText =binding.editTextDate.text.toString()
@@ -128,6 +165,12 @@ class AddEventFragment : Fragment() {
 
             val database = EventDatabase.getDatabase(requireContext())
             eventDao = database.eventDao()
+
+            if(eventId != 0L) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    eventDao.deleteEventById(eventId)
+                }
+            }
 
             CoroutineScope(Dispatchers.IO).launch {
                 eventDao.insertEvent(event)

@@ -46,7 +46,6 @@ class EventInfoFragment : Fragment() {
             binding.textViewProfessor.text = event.teacher
             binding.textViewRepeat.text = event.repeat.toString()
             val progress = calculateProgress(event)
-            //val progressString = "Ви вже пройшли " + progress.toString() + "% занять"
             val progressString = if (progress == 100) {
                 if(event.type == EventType.EXAM){
                     "Ви вже склали іспит!"
@@ -70,7 +69,8 @@ class EventInfoFragment : Fragment() {
         val startDate = event.date
         val totalLessons = event.count.toInt()
         val repeatType = event.repeat
-        Log.e("startDate", startDate.toString())
+        Log.e("totalLessons", totalLessons.toString())
+        Log.e ("startDate", startDate.toString())
         Log.e("currentDate", currentDate.toString())
 
         val passedLessons = if (currentDate.isAfter(startDate)) {
@@ -92,10 +92,10 @@ class EventInfoFragment : Fragment() {
         } else {
             0
         }
+        Log.e("passedLessons", passedLessons.toString())
         val progress = (passedLessons.toDouble() / totalLessons.toDouble() * 100).toInt()
 
         Log.e("progress", progress.toString())
-        Log.e("passedLessons", passedLessons.toString())
         return progress
     }
     override fun onDestroyView() {
