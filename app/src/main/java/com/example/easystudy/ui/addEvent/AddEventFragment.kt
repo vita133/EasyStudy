@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
@@ -95,6 +96,22 @@ class AddEventFragment : Fragment() {
         setSaveButtonClickListener(eventId)
         setCancelButtonClickListener()
 
+        binding.spinnerTypeSubject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedItem = parent?.getItemAtPosition(position).toString()
+                if (selectedItem == "Іспит") {
+                    binding.spinnerRepeat.setSelection(0)
+                    binding.spinnerRepeat.isEnabled = false
+                    binding.editTextLessons.setText("1")
+                    binding.editTextLessons.isEnabled = false
+                } else {
+                    binding.spinnerRepeat.isEnabled = true
+                    binding.editTextLessons.isEnabled = true
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
         return root
     }
 

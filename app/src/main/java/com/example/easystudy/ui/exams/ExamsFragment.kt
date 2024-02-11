@@ -65,12 +65,12 @@ class ExamsFragment : Fragment() {
 
         adapter = EventAdapter(emptyList(), object : EventAdapter.OnEventClickListener {
             override fun onEditButtonClick(event: Event) {
-                val action = ExamsFragmentDirections.actionNavigationExamsToNavigationEventInfo(event.id)
+                val action = ExamsFragmentDirections.actionNavigationExamsToNavigationAddEvent(event.id)
                 Navigation.findNavController(requireView()).navigate(action)
             }
 
             override fun onItemClick(event: Event) {
-                val action = ExamsFragmentDirections.actionNavigationExamsToNavigationAddEvent(event.id)
+                val action = ExamsFragmentDirections.actionNavigationExamsToNavigationEventInfo(event.id)
                 Navigation.findNavController(requireView()).navigate(action)
             }
         })
