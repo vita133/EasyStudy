@@ -56,4 +56,10 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             eventDao.deleteEventById(eventId)
         }
     }
+
+    fun updateGrade(eventId: Long, newGrade: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            eventDao.updateGrade(eventId, newGrade)
+        }
+    }
 }

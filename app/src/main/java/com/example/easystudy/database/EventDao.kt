@@ -35,4 +35,7 @@ interface EventDao {
 
     @Query("DELETE FROM events WHERE id = :eventId")
     suspend fun deleteEventById(eventId: Long)
+
+    @Query("UPDATE events SET grade = :newGrade WHERE id = :eventId")
+    suspend fun updateGrade(eventId: Long, newGrade: Int)
 }
