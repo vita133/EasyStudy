@@ -75,9 +75,10 @@
         android:src="@drawable/img"
         app:layout_constraintBottom_toBottomOf="@+id/event_recycler_view"
         app:layout_constraintEnd_toEndOf="@+id/event_recycler_view"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="@+id/event_recycler_view"
         app:layout_constraintTop_toBottomOf="@+id/calendar_recycler_view"
-        app:layout_constraintVertical_bias="0.805" />
+        app:layout_constraintVertical_bias="0.719" />
 
     <TextView
         android:id="@+id/textViewNoEvents"

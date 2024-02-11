@@ -84,14 +84,25 @@ class ExamsFragment : Fragment() {
     private fun displaySchedule() {
         CoroutineScope(Dispatchers.IO).launch {
             val eventsByType = eventsViewModel.getEventsByType(EventType.EXAM)
-
             withContext(Dispatchers.Main) {
                 eventsByType.observe(viewLifecycleOwner) { events ->
-                    adapter.updateEvents(events)
+                    updateUI(events)
                 }
             }
         }
     }
+
+    private fun updateUI(events: List<Event>) {
+        if (events.isEmpty()) {
+            binding.imageViewNoExams.visibility = View.VISIBLE
+            binding.textViewNoExams.visibility = View.VISIBLE
+        } else {
+            binding.imageViewNoExams.visibility = View.GONE
+            binding.textViewNoExams.visibility = View.GONE
+        }
+        adapter.updateEvents(events)
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
