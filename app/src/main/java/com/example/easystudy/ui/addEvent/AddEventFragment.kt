@@ -139,7 +139,7 @@ class AddEventFragment : Fragment() {
             val endTime: LocalTime = LocalTime.parse(endTimeText, DateTimeFormatter.ofPattern("HH:mm"))
             val type = when (typeText) {
                 "Лекція" -> EventType.LECTURE
-                "Екзамен" -> EventType.EXAM
+                "Іспит" -> EventType.EXAM
                 "Семінар" -> EventType.SEMINAR
                 "Практична" -> EventType.PRACTICE
                 else -> {EventType.LECTURE}
