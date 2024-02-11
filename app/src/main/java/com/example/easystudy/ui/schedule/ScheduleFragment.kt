@@ -301,7 +301,7 @@ class ScheduleFragment : Fragment() {
                     }
                     else -> {}
                 }
-            }
+            } else { if (event.repeat == RepeatType.NEVER && event.date == date) {events.add(event)}}
         }
         return events
     }
