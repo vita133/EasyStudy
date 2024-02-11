@@ -15,8 +15,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.easystudy.database.EventDao
-import com.example.easystudy.database.EventDatabase
 import com.example.easystudy.databinding.FragmentAddEventBinding
 import com.example.easystudy.entities.Event
 import com.example.easystudy.entities.EventType
@@ -36,7 +34,7 @@ class AddEventFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private lateinit var eventDao: EventDao
+    private lateinit var eventViewModel: EventViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -46,6 +44,8 @@ class AddEventFragment : Fragment() {
     ): View? {
         _binding = FragmentAddEventBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        eventViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
 
         val spinner: Spinner = binding.spinnerTypeSubject
         val adapter = ArrayAdapter.createFromResource(
@@ -163,17 +163,14 @@ class AddEventFragment : Fragment() {
                 count = count.toInt()
             )
 
-            val database = EventDatabase.getDatabase(requireContext())
-            eventDao = database.eventDao()
-
             if(eventId != 0L) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    eventDao.deleteEventById(eventId)
+                    eventViewModel.deleteEventById(eventId)
                 }
             }
 
             CoroutineScope(Dispatchers.IO).launch {
-                eventDao.insertEvent(event)
+                eventViewModel.insertEvent(event)
             }
             requireActivity().supportFragmentManager.popBackStack()
         }

@@ -13,12 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easystudy.R
-import com.example.easystudy.database.EventDao
-import com.example.easystudy.database.EventDatabase
 import com.example.easystudy.databinding.FragmentExamsBinding
 import com.example.easystudy.entities.Event
 import com.example.easystudy.entities.EventType
 import com.example.easystudy.ui.schedule.EventAdapter
+import com.example.easystudy.viewmodels.EventViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +32,7 @@ class ExamsFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EventAdapter
-    private lateinit var eventDao: EventDao
+    private lateinit var eventsViewModel: EventViewModel
 
 
 
@@ -51,6 +50,7 @@ class ExamsFragment : Fragment() {
         examsViewModel.text.observe(viewLifecycleOwner) {
         }
 
+        eventsViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.examsRecyclerView)
 
@@ -84,11 +84,8 @@ class ExamsFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun displaySchedule() {
-        val database = EventDatabase.getDatabase(requireContext())
-        eventDao = database.eventDao()
-
         CoroutineScope(Dispatchers.IO).launch {
-            val eventsByType = eventDao.getEventsByType(EventType.EXAM)
+            val eventsByType = eventsViewModel.getEventsByType(EventType.EXAM)
 
             withContext(Dispatchers.Main) {
                 eventsByType.observe(viewLifecycleOwner) { events ->

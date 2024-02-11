@@ -2,7 +2,6 @@ package com.example.easystudy.ui.schedule
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easystudy.R
-import com.example.easystudy.database.EventDao
-import com.example.easystudy.database.EventDatabase
 import com.example.easystudy.databinding.FragmentScheduleBinding
 import com.example.easystudy.entities.Event
-import com.example.easystudy.entities.EventType
 import com.example.easystudy.entities.RepeatType
 import com.example.easystudy.ui.addEvent.AddEventFragment
+import com.example.easystudy.viewmodels.EventViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +43,7 @@ class ScheduleFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var eventDao: EventDao
+    private lateinit var eventViewModel: EventViewModel
     private lateinit var adapter: EventAdapter
 
 
@@ -77,6 +74,8 @@ class ScheduleFragment : Fragment() {
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.calendarRecyclerView)
+
+        eventViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
 
         lastDayInCalendar.add(Calendar.MONTH, 6)
         setUpCalendar()
@@ -190,9 +189,6 @@ class ScheduleFragment : Fragment() {
         val selectedDate = getSelectedDate()
         displaySchedule(selectedDate)
 
-        val database = EventDatabase.getDatabase(requireContext())
-        eventDao = database.eventDao()
-
         adapter = EventAdapter(emptyList(), object : EventAdapter.OnEventClickListener {
             override fun onEditButtonClick(event: Event) {
                 val action = ScheduleFragmentDirections.actionNavigationScheduleToNavigationAddEvent(event.id)
@@ -210,33 +206,6 @@ class ScheduleFragment : Fragment() {
 
         setupSwipeToDelete()
 
-
-        CoroutineScope(Dispatchers.IO).launch {
-
-            withContext(Dispatchers.Main) {
-                val eventsByType = eventDao.getEventsByType(EventType.LECTURE)
-                eventsByType.observe(viewLifecycleOwner) { events ->
-                    Log.d("EventDao", "Events by type LECTURE: $events")
-                }
-
-                val allEvents = eventDao.getAllEvents()
-                allEvents.observe(viewLifecycleOwner) { events ->
-                    Log.d("EventDao", "All events: $events")
-                }
-
-                val currentDate = LocalDate.now()
-                val eventsByDate = eventDao.getEventsByDate(currentDate)
-                eventsByDate.observe(viewLifecycleOwner) { events ->
-                    Log.d("EventDao", "Events for date $currentDate: $events")
-                }
-
-                val eventId = 1L
-                val eventById = eventDao.getEventById(eventId)
-                eventById.observe(viewLifecycleOwner) { event ->
-                    Log.d("EventDao", "Event with ID $eventId: $event")
-                }
-            }
-        }
     }
 
     private fun setupSwipeToDelete() {
@@ -260,7 +229,7 @@ class ScheduleFragment : Fragment() {
 
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    eventDao.deleteEvent(deletedEvent)
+                    eventViewModel.deleteEvent(deletedEvent)
                 }
 
                 Snackbar.make(
@@ -269,7 +238,7 @@ class ScheduleFragment : Fragment() {
                     Snackbar.LENGTH_LONG
                 ).setAction("Undo") {
                     CoroutineScope(Dispatchers.IO).launch {
-                        eventDao.insertEvent(deletedEvent)
+                        eventViewModel.insertEvent(deletedEvent)
                         withContext(Dispatchers.Main) {
                             adapter.notifyItemInserted(position)
                         }
@@ -289,8 +258,6 @@ class ScheduleFragment : Fragment() {
             date.get(Calendar.MONTH) + 1,
             date.get(Calendar.DAY_OF_MONTH)
         )
-        val database = EventDatabase.getDatabase(requireContext())
-        eventDao = database.eventDao()
 
         CoroutineScope(Dispatchers.IO).launch {
             val eventsForDate = getEventsForDate(localDate)
@@ -305,7 +272,7 @@ class ScheduleFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getEventsForDate(date: LocalDate): LiveData<List<Event>> {
-        val allEventsLiveData: LiveData<List<Event>> = eventDao.getAllEvents()
+        val allEventsLiveData: LiveData<List<Event>> = eventViewModel.getAllEvents()
 
         val eventsLiveData = MediatorLiveData<List<Event>>()
 
