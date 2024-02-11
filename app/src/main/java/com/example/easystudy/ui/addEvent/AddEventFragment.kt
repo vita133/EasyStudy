@@ -126,7 +126,7 @@ class AddEventFragment : Fragment() {
             val teacher =  binding.editTextProfessor.text.toString()
             val repeatText = binding.spinnerRepeat.selectedItem.toString()
             val location =  binding.editTextPlace.text.toString()
-            val count =  binding.editTextLessons.text.toString()
+            var count =  binding.editTextLessons.text.toString()
 
             if (title.isBlank() || dateText.isBlank() || startTimeText.isBlank() ||
                 endTimeText.isBlank() || typeText.isBlank() || teacher.isBlank() ||
@@ -161,13 +161,17 @@ class AddEventFragment : Fragment() {
                 "Практика" -> EventType.PRACTICE
                 else -> {EventType.LECTURE}
             }
-            val repeat =  when (repeatText) {
+            var repeat =  when (repeatText) {
                 "Ніколи" -> RepeatType.NEVER
                 "Щотижня" -> RepeatType.WEEKLY
                 "Що 2 тижні" -> RepeatType.BIWEEKLY
                 else -> {RepeatType.NEVER}
             }
 
+            if (type == EventType.EXAM) {
+                count = "1"
+                repeat = RepeatType.NEVER
+            }
             val event = Event(
                 title = title,
                 date = date,

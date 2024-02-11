@@ -2,7 +2,6 @@ package com.example.easystudy.ui.eventInfo
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,21 +70,16 @@ class EventInfoFragment : Fragment() {
         val startDate = event.date
         val totalLessons = event.count.toInt()
         val repeatType = event.repeat
-        Log.e("totalLessons", totalLessons.toString())
-        Log.e ("startDate", startDate.toString())
-        Log.e("currentDate", currentDate.toString())
 
         val passedLessons = if (currentDate.isAfter(startDate)) {
             when (repeatType) {
                 RepeatType.WEEKLY -> {
                     val weeksBetween = java.time.temporal.ChronoUnit.WEEKS.between(startDate, currentDate)
                     (weeksBetween + 1).toInt()
-                    Log.e("weeksBetween", weeksBetween.toString())
                 }
                 RepeatType.BIWEEKLY -> {
                     val weeksBetween = java.time.temporal.ChronoUnit.WEEKS.between(startDate, currentDate)
                     ((weeksBetween + 1) / 2).toInt()
-                    Log.e("weeksBetween", weeksBetween.toString())
                 }
                 RepeatType.NEVER -> {
                     1
@@ -94,27 +88,12 @@ class EventInfoFragment : Fragment() {
         } else {
             0
         }
-        Log.e("passedLessons", passedLessons.toString())
         val progress = (passedLessons.toDouble() / totalLessons.toDouble() * 100).toInt()
 
-        Log.e("progress", progress.toString())
         return progress
     }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-//    companion object {
-//        private const val EVENT_KEY = "event"
-//
-//        fun newInstance(event: Event): EventInfoFragment {
-//            val fragment = EventInfoFragment()
-//            val args = Bundle().apply {
-//                putSerializable(EVENT_KEY, event as Serializable)
-//            }
-//            fragment.arguments = args
-//            return fragment
-//        }
-//    }
 }
