@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1022558636458",
+    "project_id": "easystudy-7b834",
+    "storage_bucket": "easystudy-7b834.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022558636458:android:4e193e419a1c4e4021c3d3",
+        "android_client_info": {
+          "package_name": "com.example.easystudy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjAuQutcBGWXy1yzQNrfzpBO0q0GwYKcs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
