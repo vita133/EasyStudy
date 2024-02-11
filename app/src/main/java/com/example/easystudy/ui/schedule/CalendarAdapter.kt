@@ -21,7 +21,6 @@ class CalendarAdapter(private val context: Context,
                       private val changeMonth: Calendar?): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
     private var mListener: OnItemClickListener? = null
     private var index = -1
-    // This is true only the first time you load the calendar.
     private var selectCurrentDate = true
     private val currentMonth = currentDate[Calendar.MONTH]
     private val currentYear = currentDate[Calendar.YEAR]
@@ -54,16 +53,10 @@ class CalendarAdapter(private val context: Context,
         val cal = Calendar.getInstance()
         cal.time = data[positionn]
 
-        /**
-         * Set the year, month and day that is gonna be displayed
-         */
         val displayMonth = cal[Calendar.MONTH]
         val displayYear= cal[Calendar.YEAR]
         val displayDay = cal[Calendar.DAY_OF_MONTH]
 
-        /**
-         * Set text to txtDayInWeek and txtDay.
-         */
         try {
             val dayInWeekFormat = SimpleDateFormat("E", Locale("uk", "UA"))
             val dayInWeek = dayInWeekFormat.format(cal.time)
@@ -73,9 +66,6 @@ class CalendarAdapter(private val context: Context,
         }
         holder.txtDay!!.text = cal[Calendar.DAY_OF_MONTH].toString()
 
-        /**
-         * Make all dates clickable.
-         */
         holder.linearLayout!!.setOnClickListener {
             index = holder.adapterPosition
             selectCurrentDate = false
@@ -83,9 +73,6 @@ class CalendarAdapter(private val context: Context,
             notifyDataSetChanged()
         }
 
-        /**
-         * Check if the current date is selected or not.
-         */
         if (index == positionn || (displayDay == selectedDay && displayMonth == selectedMonth && displayYear == selectedYear && selectCurrentDate)) {
             makeItemSelected(holder)
         } else {
@@ -99,9 +86,6 @@ class CalendarAdapter(private val context: Context,
         var linearLayout = itemView.findViewById<LinearLayout>(R.id.calendar_linear_layout)
     }
 
-    /**
-     * OnClickListener.
-     */
     interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
@@ -110,9 +94,6 @@ class CalendarAdapter(private val context: Context,
         mListener = listener
     }
 
-    /**
-     * This make the item disabled.
-     */
     private fun makeItemDefault(holder: ViewHolder, cal: Calendar) {
         holder.txtDay!!.setTextColor(Color.BLACK)
         holder.txtDayInWeek!!.setTextColor(Color.BLACK)
@@ -130,14 +111,10 @@ class CalendarAdapter(private val context: Context,
         return cal.before(currentCalendar)
     }
 
-    /**
-     * This make the item selected.
-     */
     private fun makeItemSelected(holder: ViewHolder) {
         holder.txtDay!!.setTextColor(Color.parseColor("#FFFFFF"))
         holder.txtDayInWeek!!.setTextColor(Color.parseColor("#FFFFFF"))
         holder.linearLayout!!.setBackgroundColor(ContextCompat.getColor(context, R.color.dark_blue))
         holder.linearLayout!!.isEnabled = false
     }
-
 }

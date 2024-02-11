@@ -27,8 +27,6 @@ class ExamsFragment : Fragment() {
 
     private var _binding: FragmentExamsBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EventAdapter

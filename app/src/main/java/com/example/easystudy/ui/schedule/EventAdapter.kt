@@ -125,8 +125,6 @@ class EventAdapter(private var eventList: List<Event>, private val onEventClickL
             eventTypeTextView.text = event.type.toUkrainianString()
             eventTimeTextView.text = formattedTime
             eventLocationTextView.text = event.location
-
         }
-
     }
 }

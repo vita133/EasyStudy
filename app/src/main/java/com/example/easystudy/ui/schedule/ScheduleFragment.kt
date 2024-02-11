@@ -38,8 +38,6 @@ class ScheduleFragment : Fragment() {
 
     private var _binding: FragmentScheduleBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
@@ -278,14 +276,7 @@ class ScheduleFragment : Fragment() {
 
         eventsLiveData.addSource(allEventsLiveData) { allEvents ->
             val recurringEvents = checkForRecurringEvents(date, allEvents)
-            val eventsForDate = mutableListOf<Event>()
-
-            for (event in allEvents) {
-                if (event.date == date || recurringEvents.any { it.date == event.date }) {
-                    eventsForDate.add(event)
-                }
-            }
-            eventsLiveData.value = eventsForDate
+            eventsLiveData.value = recurringEvents
         }
         return eventsLiveData
     }
@@ -295,15 +286,17 @@ class ScheduleFragment : Fragment() {
         val events: MutableList<Event> = mutableListOf()
 
         for (event in allEvents) {
-            if (event.repeat != RepeatType.NEVER && (event.date.isBefore(date) )) { //|| event.date == date)) {
+            if (event.repeat != RepeatType.NEVER && (event.date.isBefore(date) || event.date == date)) {
                 when (event.repeat) {
                     RepeatType.WEEKLY -> {
-                        if (date.dayOfWeek == event.date.dayOfWeek)
+                        val weeksBetween = ChronoUnit.WEEKS.between(event.date, date)
+                        if (date.dayOfWeek == event.date.dayOfWeek &&  (weeksBetween + 1).toInt() <= event.count.toInt())
                             events.add(event)
                     }
                     RepeatType.BIWEEKLY -> {
                         val weeksBetween = ChronoUnit.WEEKS.between(event.date, date)
-                        if ((weeksBetween % 2).toInt() == 0 && date.dayOfWeek == event.date.dayOfWeek)
+                        val weekPairs =  (weeksBetween + 1).toInt().div(2)
+                        if ((weeksBetween % 2).toInt() == 0 && date.dayOfWeek == event.date.dayOfWeek && weekPairs < event.count.toInt())
                             events.add(event)
                     }
                     else -> {}

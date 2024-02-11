@@ -141,7 +141,7 @@ class AddEventFragment : Fragment() {
                 "Лекція" -> EventType.LECTURE
                 "Іспит" -> EventType.EXAM
                 "Семінар" -> EventType.SEMINAR
-                "Практична" -> EventType.PRACTICE
+                "Практика" -> EventType.PRACTICE
                 else -> {EventType.LECTURE}
             }
             val repeat =  when (repeatText) {
