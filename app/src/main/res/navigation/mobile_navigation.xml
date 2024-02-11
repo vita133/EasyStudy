@@ -59,7 +59,11 @@
         android:id="@+id/navigation_event_info"
         android:name="com.example.easystudy.ui.eventInfo.EventInfoFragment"
         android:label="Інформація про подію"
-        tools:layout="@layout/fragment_event_info" />
+        tools:layout="@layout/fragment_event_info" >
+        <action
+            android:id="@+id/action_navigation_event_info_to_navigation_schedule"
+            app:destination="@id/navigation_schedule" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_add_event"

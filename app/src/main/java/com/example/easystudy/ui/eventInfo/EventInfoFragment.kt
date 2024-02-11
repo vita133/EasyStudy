@@ -29,6 +29,7 @@ class EventInfoFragment : Fragment() {
         _binding = FragmentEventInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+
         val arguments = arguments
         var eventId: Long = 0
         if (arguments != null) {
@@ -58,6 +59,7 @@ class EventInfoFragment : Fragment() {
             binding.textViewProgressPercent.text = progress.toString() + "%"
             binding.progressBar.progress = progress
         }
+
 
 
         return root
