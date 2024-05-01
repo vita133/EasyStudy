@@ -1,11 +1,9 @@
 package com.example.easystudy.ui.eventInfo
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.easystudy.databinding.FragmentEventInfoBinding
@@ -19,7 +17,6 @@ class EventInfoFragment : Fragment() {
     private var _binding: FragmentEventInfoBinding? = null
     private val binding get() = _binding!!
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,6 +35,9 @@ class EventInfoFragment : Fragment() {
 
         val eventLiveData = eventViewModel.getEventById(eventId)
         eventLiveData.observe(viewLifecycleOwner) { event ->
+            if (event == null) {
+                return@observe
+            }
             binding.textViewName.text = event.title
             val time = event.startTime.toString() + " - " + event.endTime.toString()
             binding.textViewTime.text = time
@@ -58,13 +58,9 @@ class EventInfoFragment : Fragment() {
             binding.textViewProgressPercent.text = progress.toString() + "%"
             binding.progressBar.progress = progress
         }
-
-
-
         return root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun calculateProgress(event: Event): Int {
         val currentDate = LocalDate.now()
         val startDate = event.date

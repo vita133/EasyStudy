@@ -1,11 +1,14 @@
 package com.example.easystudy.ui.addEvent
 
+import com.example.easystudy.ExamAppWidget
 import android.R
 import android.annotation.SuppressLint
-import android.os.Build
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +16,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.easystudy.databinding.FragmentAddEventBinding
@@ -37,7 +39,6 @@ class AddEventFragment : Fragment() {
 
     private lateinit var eventViewModel: EventViewModel
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -115,7 +116,6 @@ class AddEventFragment : Fragment() {
         return root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setSaveButtonClickListener(eventId: Long) {
         binding.buttonSaveEvent.setOnClickListener {
             val title = binding.editTextNameSubject.text.toString()
@@ -194,6 +194,16 @@ class AddEventFragment : Fragment() {
                 eventViewModel.insertEvent(event)
             }
             requireActivity().supportFragmentManager.popBackStack()
+            // update widget
+            val appWidgetManager = AppWidgetManager.getInstance(requireContext())
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(requireContext(), ExamAppWidget::class.java))
+
+            // Оновлення віджетів
+            for (appWidgetId in appWidgetIds) {
+                Log.d("AppWidgetId", appWidgetId.toString())
+                ExamAppWidget.updateWidget(requireContext(), appWidgetManager, appWidgetId)
+            }
+
         }
     }
 
@@ -270,7 +280,6 @@ class AddEventFragment : Fragment() {
 
         binding.editTextTimeEnd.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {

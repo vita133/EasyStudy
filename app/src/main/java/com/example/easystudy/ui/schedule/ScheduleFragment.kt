@@ -1,11 +1,13 @@
 package com.example.easystudy.ui.schedule
 
-import android.os.Build
+import com.example.easystudy.ExamAppWidget
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -56,10 +58,10 @@ class ScheduleFragment : Fragment() {
     private var selectedDay: Int = currentDay
     private var selectedMonth: Int = currentMonth
     private var selectedYear: Int = currentYear
+    private lateinit var appWidgetManager: AppWidgetManager
+    private lateinit var appWidgetIds: IntArray
 
     private val dates = ArrayList<Date>()
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,6 +71,7 @@ class ScheduleFragment : Fragment() {
 
         _binding = FragmentScheduleBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.calendarRecyclerView)
@@ -139,7 +142,6 @@ class ScheduleFragment : Fragment() {
         }
 
         calendarAdapter.setOnItemClickListener(object : CalendarAdapter.OnItemClickListener {
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemClick(position: Int) {
                 val clickCalendar = Calendar.getInstance()
                 clickCalendar.time = dates[position]
@@ -178,8 +180,6 @@ class ScheduleFragment : Fragment() {
         return selectedDate
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentScheduleBinding.bind(view)
@@ -220,15 +220,14 @@ class ScheduleFragment : Fragment() {
                 return false
             }
 
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val deletedEvent = adapter.getEventAtPosition(position)
 
-
                 CoroutineScope(Dispatchers.IO).launch {
                     eventViewModel.deleteEvent(deletedEvent)
                 }
+                updateWidget()
 
                 Snackbar.make(
                     binding.root,
@@ -241,6 +240,11 @@ class ScheduleFragment : Fragment() {
                             adapter.notifyItemInserted(position)
                         }
                     }
+
+                    ///
+
+                    updateWidget()
+
                 }.show()
             }
         }
@@ -249,7 +253,6 @@ class ScheduleFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun displaySchedule(date: Calendar) {
         val localDate = LocalDate.of(
             date.get(Calendar.YEAR),
@@ -265,10 +268,10 @@ class ScheduleFragment : Fragment() {
                     updateUI(events)
                 }
             }
+
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun getEventsForDate(date: LocalDate): LiveData<List<Event>> {
         val allEventsLiveData: LiveData<List<Event>> = eventViewModel.getAllEvents()
 
@@ -281,7 +284,6 @@ class ScheduleFragment : Fragment() {
         return eventsLiveData
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun checkForRecurringEvents(date: LocalDate, allEvents: List<Event>): List<Event> {
         val events: MutableList<Event> = mutableListOf()
 
@@ -315,10 +317,24 @@ class ScheduleFragment : Fragment() {
             binding.textViewNoEvents.visibility = View.GONE
         }
         adapter.updateEvents(events)
+
+        updateWidget()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun updateWidget() {
+        // update widget
+        val appWidgetManager = AppWidgetManager.getInstance(requireContext())
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(requireContext(), ExamAppWidget::class.java))
+
+        // Оновлення віджетів
+        for (appWidgetId in appWidgetIds) {
+            Log.d("AppWidgetId", appWidgetId.toString())
+            ExamAppWidget.updateWidget(requireContext(), appWidgetManager, appWidgetId)
+        }
     }
 }
