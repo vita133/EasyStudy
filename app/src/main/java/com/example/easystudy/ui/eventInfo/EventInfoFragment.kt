@@ -61,7 +61,7 @@ class EventInfoFragment : Fragment() {
         return root
     }
 
-    fun calculateProgress(event: Event): Int {
+    private fun calculateProgress(event: Event): Int {
         val currentDate = LocalDate.now()
         val startDate = event.date
         val totalLessons = event.count.toInt()

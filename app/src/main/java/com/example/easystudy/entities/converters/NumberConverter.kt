@@ -1,4 +1,4 @@
-package com.example.easystudy.entities
+package com.example.easystudy.entities.converters
 import androidx.room.TypeConverter
 
 class NumberConverter {

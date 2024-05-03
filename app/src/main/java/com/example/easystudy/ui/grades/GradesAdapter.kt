@@ -18,7 +18,6 @@ class GradesAdapter (private var eventList: List<Event>, private val listener: G
         return GradeViewHolder(itemView)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: GradeViewHolder, position: Int) {
         val currentItem = eventList[position]
         holder.bind(currentItem)
@@ -51,7 +50,6 @@ class GradesAdapter (private var eventList: List<Event>, private val listener: G
             }
         }
 
-        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(event: Event) {
             eventTitleTextView.text = event.title
             eventTeacherTextView.text = event.teacher

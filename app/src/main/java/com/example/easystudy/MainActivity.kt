@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_schedule, R.id.navigation_exams, R.id.navigation_grades
             )
         )
-        //Комп'ютерна графіка
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }

@@ -39,14 +39,9 @@ class ExamsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val examsViewModel =
-            ViewModelProvider(this).get(ExamsViewModel::class.java)
 
         _binding = FragmentExamsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        examsViewModel.text.observe(viewLifecycleOwner) {
-        }
 
         eventsViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
         val snapHelper = LinearSnapHelper()
@@ -56,7 +51,6 @@ class ExamsFragment : Fragment() {
         return root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.exams_recycler_view)
@@ -80,7 +74,6 @@ class ExamsFragment : Fragment() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun displaySchedule() {
         CoroutineScope(Dispatchers.IO).launch {
             val eventsByType = eventsViewModel.getEventsByType(EventType.EXAM)

@@ -1,4 +1,4 @@
-package com.example.easystudy.entities
+package com.example.easystudy.entities.converters
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -14,7 +14,6 @@ object DateConverter {
         return timestamp?.let { LocalDate.ofEpochDay(it) }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     @JvmStatic
     fun toTimestamp(date: LocalDate?): Long? {

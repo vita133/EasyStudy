@@ -198,7 +198,6 @@ class AddEventFragment : Fragment() {
             val appWidgetManager = AppWidgetManager.getInstance(requireContext())
             val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(requireContext(), ExamAppWidget::class.java))
 
-            // Оновлення віджетів
             for (appWidgetId in appWidgetIds) {
                 Log.d("AppWidgetId", appWidgetId.toString())
                 ExamAppWidget.updateWidget(requireContext(), appWidgetManager, appWidgetId)

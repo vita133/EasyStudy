@@ -54,7 +54,6 @@ class GradesFragment : Fragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.grades_recycler_view)
@@ -72,7 +71,6 @@ class GradesFragment : Fragment() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun showGradeInputDialog(event: Event) {
         if (event.date.isBefore(LocalDate.now()) ||
             (event.date == LocalDate.now() && event.endTime.isBefore(LocalTime.now()))) {
@@ -103,7 +101,6 @@ class GradesFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun displayGrades() {
         CoroutineScope(Dispatchers.IO).launch {
             val eventsByType = eventViewModel.getEventsByType(EventType.EXAM)

@@ -153,7 +153,6 @@ class ExamAppWidget : AppWidgetProvider() {
         }
 
         private fun checkForRecurringEvents(date: LocalDate, allEvents: List<Event>): List<Event> {
-            //get events that goes after the current date and time and are recurring
             val events: MutableList<Event> = mutableListOf()
             for (event in allEvents) {
                 if (event.date.isAfter(date) && event.repeat != RepeatType.NEVER) {
